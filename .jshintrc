@@ -1,0 +1,24 @@
+{
+  "globals": {
+    "module": true,
+    "define": true,
+    "requirejs": true,
+    "require": true
+  },
+  "curly": true,
+  "eqeqeq": true,
+  "immed": true,
+  "latedef": true,
+  "newcap": true,
+  "noarg": true,
+  "sub": true,
+  "undef": true,
+  "unused": true,
+  "boss": true,
+  "eqnull": true,
+  "node": true,
+  "nonew": true,
+  "trailing": true,
+  "bitwise": true,
+  "indent": 4
+}
