@@ -45,7 +45,7 @@
                     }
                 }
             },
-            "connStr" : "mongodb://localhost"
+            "_connStr" : "mongodb://localhost"
         }
     },
     "view_specifications" : [
@@ -305,12 +305,12 @@
     "transaction_log" : {
         "database" : "testing",
         "collection" : "transaction_log",
-        "connStr" : "mongodb://localhost"
+        "_connStr" : "mongodb://localhost"
     },
     "queue" : {
         "database" : "testing",
         "collection" : "q_queue",
-        "connStr" : "mongodb://localhost"
+        "_connStr" : "mongodb://localhost"
     }
 
 }
