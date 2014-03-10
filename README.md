@@ -1,4 +1,4 @@
-tripod-node
+![tripod-node](logo.png)
 ===========
 
 ![Alt desc](http://95.138.143.82:3002/builds/TRINODE/status.png)
