@@ -343,7 +343,7 @@ describe("TripodGraph test suite", function(){
     });
 
     describe("Testing getters", function(){
-        it("should output literal values", function(done) {
+        it("should output first literal value", function(done) {
             var graph = new tripod.TripleGraph();
             graph.addTripodDoc(
                 {
@@ -371,6 +371,72 @@ describe("TripodGraph test suite", function(){
             assert.equal(resourceValue,null)
             done();
         });
+
+        it("should output all literal values", function(done) {
+            var graph = new tripod.TripleGraph();
+            graph.addTripodDoc(
+                {
+                    "_id": {
+                        "r":"http://life.ac.uk/resources/3",
+                        "c":"http://talisaspire.com/"
+                    },
+                    "dct:title": [
+                        {
+                            "l":"Some title"
+                        },
+                        {
+                            "l":"Some title 2"
+                        }
+                    ],
+                    "rdfs:seeAlso":
+                    {
+                        "u":"http://life.ac.uk/resources/1"
+                    }
+                }
+            );
+            var literalValue = graph.getLiteralValues("http://life.ac.uk/resources/3","dct:title");
+            literalValue.should.be.Array;
+            literalValue.should.have.lengthOf(2);
+            literalValue.should.containEql("Some title");
+            literalValue.should.containEql("Some title 2");
+            var resourceValue = graph.getResourceValues("http://life.ac.uk/resources/3","dct:title");
+            resourceValue.should.be.Array;
+            resourceValue.should.have.lengthOf(0);
+            done();
+        });
+
+        it("should output first resource value", function(done) {
+            var graph = new tripod.TripleGraph();
+            graph.addTripodDoc(
+                {
+                    "_id": {
+                        "r":"http://life.ac.uk/resources/3",
+                        "c":"http://talisaspire.com/"
+                    },
+                    "dct:title": [
+                        {
+                            "l":"Some title"
+                        },
+                        {
+                            "l":"Some title 2"
+                        }
+                    ],
+                    "rdfs:seeAlso":
+                    {
+                        "u":"http://life.ac.uk/resources/1"
+                    }
+                }
+            );
+            var resourceValue = graph.getResourceValues("http://life.ac.uk/resources/3","rdfs:seeAlso");
+            resourceValue.should.be.Array;
+            resourceValue.should.have.lengthOf(1);
+            resourceValue.should.containEql("http://life.ac.uk/resources/1");
+            var literalValue = graph.getLiteralValues("http://life.ac.uk/resources/3","rdfs:seeAlso");
+            literalValue.should.be.Array;
+            literalValue.should.have.lengthOf(0);
+            done();
+        });
+
         it("should output resource values", function(done) {
             var graph = new tripod.TripleGraph();
             graph.addTripodDoc(
@@ -398,6 +464,180 @@ describe("TripodGraph test suite", function(){
             var literalValue = graph.getFirstLiteral("http://life.ac.uk/resources/3","rdfs:seeAlso");
             assert.equal(literalValue,null)
             done();
+        });
+
+        it("should output subjects of a given type", function(done) {
+            var graph = new tripod.TripleGraph();
+            graph.addTripodDoc(
+                {
+                    "_id": {
+                        "r":"http://life.ac.uk/resources/3",
+                        "c":"http://talisaspire.com/"
+                    },
+                    "dct:title": [
+                        {
+                            "l":"Some title"
+                        },
+                        {
+                            "l":"Some title 2"
+                        }
+                    ],
+                    "rdf:type": [
+                        {
+                            "u":"http://life.ac.uk/type/1"
+                        },
+                        {
+                            "u":"http://life.ac.uk/type/2"
+                        }
+                    ],
+                    "rdfs:seeAlso":
+                    {
+                        "u":"http://life.ac.uk/resources/1"
+                    }
+                }
+            );
+            graph.addTripodDoc(
+                {
+                    "_id": {
+                        "r":"http://life.ac.uk/resources/4",
+                        "c":"http://talisaspire.com/"
+                    },
+                    "rdf:type": [
+                        {
+                            "u":"http://life.ac.uk/type/1"
+                        },
+                        {
+                            "u":"http://life.ac.uk/type/3"
+                        }
+                    ]
+                }
+            );
+            var type1 = graph.getSubjectsOfType("http://life.ac.uk/type/1");
+            type1.should.be.an.Array;
+            type1.should.have.lengthOf(2);
+            type1.should.containEql("http://life.ac.uk/resources/3");
+            type1.should.containEql("http://life.ac.uk/resources/4");
+
+            var type2 = graph.getSubjectsOfType("http://life.ac.uk/type/2");
+            type2.should.be.an.Array;
+            type2.should.have.lengthOf(1);
+            type2.should.containEql("http://life.ac.uk/resources/3");
+
+            var type3 = graph.getSubjectsOfType("http://life.ac.uk/type/3");
+            type3.should.be.an.Array;
+            type3.should.have.lengthOf(1);
+            type3.should.containEql("http://life.ac.uk/resources/4");
+
+            var type4 = graph.getSubjectsOfType("http://life.ac.uk/type/4");
+            type4.should.be.an.Array;
+            type4.should.have.lengthOf(0);
+
+            done();
+        });
+
+        it("should return an Array of subjects", function(done) {
+            done();
+            var graph = new tripod.TripleGraph();
+            graph.addTripodDoc(
+                {
+                    "_id": {
+                        "r":"http://life.ac.uk/resources/3",
+                        "c":"http://talisaspire.com/"
+                    },
+                    "dct:title": [
+                        {
+                            "l":"Some title"
+                        },
+                        {
+                            "l":"Some title 2"
+                        }
+                    ],
+                    "rdf:type": [
+                        {
+                            "u":"http://life.ac.uk/type/1"
+                        },
+                        {
+                            "u":"http://life.ac.uk/type/2"
+                        }
+                    ],
+                    "rdfs:seeAlso":
+                    {
+                        "u":"http://life.ac.uk/resources/1"
+                    }
+                }
+            );
+            graph.addTripodDoc(
+                {
+                    "_id": {
+                        "r":"http://life.ac.uk/resources/4",
+                        "c":"http://talisaspire.com/"
+                    },
+                    "rdf:type": [
+                        {
+                            "u":"http://life.ac.uk/type/1"
+                        },
+                        {
+                            "u":"http://life.ac.uk/type/3"
+                        }
+                    ]
+                }
+            );
+            var subjects = graph.getSubjects();
+            subjects.should.be.an.Array;
+            subjects.should.have.lengthOf(2);
+            subjects.should.containEql("http://life.ac.uk/resources/4");
+            subjects.should.containEql("http://life.ac.uk/resources/3");
+        });
+
+        it("should return a subject sub-graph", function(done) {
+            done();
+            var graph = new tripod.TripleGraph();
+            graph.addTripodDoc(
+                {
+                    "_id": {
+                        "r":"http://life.ac.uk/resources/3",
+                        "c":"http://talisaspire.com/"
+                    },
+                    "dct:title": [
+                        {
+                            "l":"Some title"
+                        },
+                        {
+                            "l":"Some title 2"
+                        }
+                    ],
+                    "rdf:type": [
+                        {
+                            "u":"http://life.ac.uk/type/1"
+                        },
+                        {
+                            "u":"http://life.ac.uk/type/2"
+                        }
+                    ],
+                    "rdfs:seeAlso":
+                    {
+                        "u":"http://life.ac.uk/resources/1"
+                    }
+                }
+            );
+            graph.addTripodDoc(
+                {
+                    "_id": {
+                        "r":"http://life.ac.uk/resources/4",
+                        "c":"http://talisaspire.com/"
+                    },
+                    "rdf:type": [
+                        {
+                            "u":"http://life.ac.uk/type/1"
+                        },
+                        {
+                            "u":"http://life.ac.uk/type/3"
+                        }
+                    ]
+                }
+            );
+            var subGraph = graph.getSubjectSubgraph("http://life.ac.uk/resources/4");
+            subGraph.getSubjects().should.have.lengthOf(1);
         });
     });
 
