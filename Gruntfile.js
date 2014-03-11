@@ -13,6 +13,13 @@ module.exports = function (grunt) {
                 },
                 src: ["test/**/*.js"]
             },
+            "test-x-unit": {
+                options: {
+                    reporter: "xunit",
+                    timeout: 10000
+                },
+                src: ["test/**/*.js"]
+            },
             filter: {
                 src: ["test/**/*_test.js"],
                 options: {
@@ -67,6 +74,7 @@ module.exports = function (grunt) {
 
     // Default task.
     grunt.registerTask('default', ['jshint', 'mochaTest:test']);
+    grunt.registerTask('bamboo', ['jshint', 'mochaTest:test-x-unit']);
     grunt.registerTask('clean', ['jshint', 'jsbeautifier:modify']);
     grunt.registerTask('verify', ['jshint', 'jsbeautifier:verify']);
     grunt.registerTask('filtertest', 'Runs tests based on pattern specified', function (taskName, pattern) {

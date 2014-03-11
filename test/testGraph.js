@@ -1,6 +1,6 @@
+require('./conf');
 var should = require('should');
 var assert = require('assert');
-process.env.TRIPOD_CONFIG = './test/conf.json';
 var tripod = require('../index');
 
 describe("TripodGraph test suite", function(){
