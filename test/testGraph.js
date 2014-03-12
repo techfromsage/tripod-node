@@ -641,9 +641,8 @@ describe("TripodGraph test suite", function(){
         });
     });
 
-    describe("Testing removes", function() {
+    describe("Testing remove functions", function() {
         it("should remove all triples about a subject", function(done) {
-            done();
             var graph = new tripod.TripleGraph();
             graph.addTripodDoc(
                 {
@@ -696,7 +695,48 @@ describe("TripodGraph test suite", function(){
             graph.getSubjects().should.have.lengthOf(1);
             graph.getSubjects().should.containEql("http://life.ac.uk/resources/3");
             graph.getSubjects().should.not.containEql("http://life.ac.uk/resources/4");
+            done();
         });
-    })
+    });
 
+    describe("Testing utility functions", function() {
+        it("should report empty when graph empty", function(done) {
+            var graph = new tripod.TripleGraph();
+            graph.isEmpty().should.be.true;
+            done();
+        });
+        it("should not report empty when populated", function(done) {
+            var graph = new tripod.TripleGraph();
+            graph.addTripodDoc(
+                {
+                    "_id": {
+                        "r":"http://life.ac.uk/resources/3",
+                        "c":"http://talisaspire.com/"
+                    },
+                    "dct:title": [
+                        {
+                            "l":"Some title"
+                        },
+                        {
+                            "l":"Some title 2"
+                        }
+                    ],
+                    "rdf:type": [
+                        {
+                            "u":"http://life.ac.uk/type/1"
+                        },
+                        {
+                            "u":"http://life.ac.uk/type/2"
+                        }
+                    ],
+                    "rdfs:seeAlso":
+                    {
+                        "u":"http://life.ac.uk/resources/1"
+                    }
+                }
+            );
+            graph.isEmpty().should.be.false;
+            done();
+        });
+    });
 });
