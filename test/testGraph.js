@@ -705,6 +705,7 @@ describe("TripodGraph test suite", function(){
             graph.isEmpty().should.be.true;
             done();
         });
+
         it("should not report empty when populated", function(done) {
             var graph = new tripod.TripleGraph();
             graph.addTripodDoc(
@@ -736,6 +737,80 @@ describe("TripodGraph test suite", function(){
                 }
             );
             graph.isEmpty().should.be.false;
+            done();
+        });
+
+        it("should report triples about a resource", function(done) {
+            var graph = new tripod.TripleGraph();
+            graph.addTripodDoc(
+                {
+                    "_id": {
+                        "r":"http://life.ac.uk/resources/3",
+                        "c":"http://talisaspire.com/"
+                    },
+                    "dct:title": [
+                        {
+                            "l":"Some title"
+                        },
+                        {
+                            "l":"Some title 2"
+                        }
+                    ],
+                    "rdf:type": [
+                        {
+                            "u":"http://life.ac.uk/type/1"
+                        },
+                        {
+                            "u":"http://life.ac.uk/type/2"
+                        }
+                    ],
+                    "rdfs:seeAlso":
+                    {
+                        "u":"http://life.ac.uk/resources/1"
+                    }
+                }
+            );
+            graph.hasTriplesAbout("http://life.ac.uk/resources/3").should.be.true;
+            done();
+        });
+
+        it("should report is of type", function(done) {
+            var graph = new tripod.TripleGraph();
+            graph.addTripodDoc(
+                {
+                    "_id": {
+                        "r":"http://life.ac.uk/resources/3",
+                        "c":"http://talisaspire.com/"
+                    },
+                    "dct:title": [
+                        {
+                            "l":"Some title"
+                        },
+                        {
+                            "l":"Some title 2"
+                        }
+                    ],
+                    "rdf:type": [
+                        {
+                            "u":"http://life.ac.uk/type/1"
+                        },
+                        {
+                            "u":"http://life.ac.uk/type/2"
+                        }
+                    ],
+                    "rdfs:seeAlso":
+                    {
+                        "u":"http://life.ac.uk/resources/1"
+                    }
+                }
+            );
+            graph.isOfType("http://life.ac.uk/resources/3","http://life.ac.uk/type/3").should.be.false;
+            graph.isOfType("http://life.ac.uk/resources/3","http://life.ac.uk/type/2").should.be.true;
+            graph.isOfType("http://life.ac.uk/resources/3",["http://life.ac.uk/type/2"]).should.be.true;
+            graph.isOfType("http://life.ac.uk/resources/3",["http://life.ac.uk/type/1"]).should.be.true;
+            graph.isOfType("http://life.ac.uk/resources/3",["http://life.ac.uk/type/2","http://life.ac.uk/type/1"]).should.be.true;
+            graph.isOfType("http://life.ac.uk/resources/3",["http://life.ac.uk/type/2","http://life.ac.uk/type/3"]).should.be.true;
+            graph.isOfType("http://life.ac.uk/resources/3",["http://life.ac.uk/type/4","http://life.ac.uk/type/3"]).should.be.false;
             done();
         });
     });
