@@ -394,7 +394,7 @@ describe("TripodGraph test suite", function(){
                     }
                 }
             );
-            var literalValue = graph.getLiteralValues("http://life.ac.uk/resources/3","dct:title");
+            var literalValue = graph.getLiteralValues("http://life.ac.uk/resources/3","http://purl.org/dc/terms/title");
             literalValue.should.be.Array;
             literalValue.should.have.lengthOf(2);
             literalValue.should.containEql("Some title");
@@ -459,7 +459,7 @@ describe("TripodGraph test suite", function(){
                     }
                 }
             );
-            var resourceValue = graph.getFirstResource("http://life.ac.uk/resources/3","rdfs:seeAlso");
+            var resourceValue = graph.getFirstResource("http://life.ac.uk/resources/3","http://www.w3.org/2000/01/rdf-schema#seeAlso");
             resourceValue.should.equal("http://life.ac.uk/resources/1");
             var literalValue = graph.getFirstLiteral("http://life.ac.uk/resources/3","rdfs:seeAlso");
             assert.equal(literalValue,null)
@@ -804,6 +804,7 @@ describe("TripodGraph test suite", function(){
                     }
                 }
             );
+            graph.isOfType("http://life.ac.uk/resources/1","http://life.ac.uk/type/3").should.be.false;
             graph.isOfType("http://life.ac.uk/resources/3","http://life.ac.uk/type/3").should.be.false;
             graph.isOfType("http://life.ac.uk/resources/3","http://life.ac.uk/type/2").should.be.true;
             graph.isOfType("http://life.ac.uk/resources/3",["http://life.ac.uk/type/2"]).should.be.true;
@@ -811,6 +812,43 @@ describe("TripodGraph test suite", function(){
             graph.isOfType("http://life.ac.uk/resources/3",["http://life.ac.uk/type/2","http://life.ac.uk/type/1"]).should.be.true;
             graph.isOfType("http://life.ac.uk/resources/3",["http://life.ac.uk/type/2","http://life.ac.uk/type/3"]).should.be.true;
             graph.isOfType("http://life.ac.uk/resources/3",["http://life.ac.uk/type/4","http://life.ac.uk/type/3"]).should.be.false;
+            done();
+        });
+
+        it("should report whether property values present", function(done) {
+            var graph = new tripod.TripleGraph();
+            graph.addTripodDoc(
+                {
+                    "_id": {
+                        "r":"http://life.ac.uk/resources/3",
+                        "c":"http://talisaspire.com/"
+                    },
+                    "dct:title": [
+                        {
+                            "l":"Some title"
+                        },
+                        {
+                            "l":"Some title 2"
+                        }
+                    ],
+                    "rdf:type": [
+                        {
+                            "u":"http://life.ac.uk/type/1"
+                        },
+                        {
+                            "u":"http://life.ac.uk/type/2"
+                        }
+                    ],
+                    "rdfs:seeAlso":
+                    {
+                        "u":"http://life.ac.uk/resources/1"
+                    }
+                }
+            );
+            graph.hasResourceProperty("http://life.ac.uk/resources/3","dct:format").should.be.false;
+            graph.hasResourceProperty("http://life.ac.uk/resources/1","dct:title").should.be.false;
+            graph.hasResourceProperty("http://life.ac.uk/resources/3","dct:title").should.be.true;
+            graph.hasResourceProperty("http://life.ac.uk/resources/3","http://purl.org/dc/terms/title").should.be.true;
             done();
         });
     });
