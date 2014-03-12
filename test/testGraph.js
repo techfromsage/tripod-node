@@ -641,4 +641,62 @@ describe("TripodGraph test suite", function(){
         });
     });
 
+    describe("Testing removes", function() {
+        it("should remove all triples about a subject", function(done) {
+            done();
+            var graph = new tripod.TripleGraph();
+            graph.addTripodDoc(
+                {
+                    "_id": {
+                        "r":"http://life.ac.uk/resources/3",
+                        "c":"http://talisaspire.com/"
+                    },
+                    "dct:title": [
+                        {
+                            "l":"Some title"
+                        },
+                        {
+                            "l":"Some title 2"
+                        }
+                    ],
+                    "rdf:type": [
+                        {
+                            "u":"http://life.ac.uk/type/1"
+                        },
+                        {
+                            "u":"http://life.ac.uk/type/2"
+                        }
+                    ],
+                    "rdfs:seeAlso":
+                    {
+                        "u":"http://life.ac.uk/resources/1"
+                    }
+                }
+            );
+            graph.addTripodDoc(
+                {
+                    "_id": {
+                        "r":"http://life.ac.uk/resources/4",
+                        "c":"http://talisaspire.com/"
+                    },
+                    "rdf:type": [
+                        {
+                            "u":"http://life.ac.uk/type/1"
+                        },
+                        {
+                            "u":"http://life.ac.uk/type/3"
+                        }
+                    ]
+                }
+            );
+            graph.getSubjects().should.have.lengthOf(2);
+            graph.getSubjects().should.containEql("http://life.ac.uk/resources/3");
+            graph.getSubjects().should.containEql("http://life.ac.uk/resources/4");
+            graph.removeTriplesAbout("http://life.ac.uk/resources/4");
+            graph.getSubjects().should.have.lengthOf(1);
+            graph.getSubjects().should.containEql("http://life.ac.uk/resources/3");
+            graph.getSubjects().should.not.containEql("http://life.ac.uk/resources/4");
+        });
+    })
+
 });
